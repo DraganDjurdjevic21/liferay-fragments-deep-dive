@@ -1,1 +1,0 @@
-# liferay-fragments-deep-dive
