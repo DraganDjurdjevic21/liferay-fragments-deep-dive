@@ -1,0 +1,5 @@
+Bundle-Name: Fragment Contributor Demo
+Bundle-SymbolicName: com.liferay.fragment.collection.contributor.demo
+-dsannotations-options: inherit
+Bundle-Version: 1.0.0
+Web-ContextPath: /my-fragment-collection-contributor

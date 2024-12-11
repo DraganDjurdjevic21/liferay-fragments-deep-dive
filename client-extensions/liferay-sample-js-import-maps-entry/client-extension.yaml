@@ -1,0 +1,8 @@
+assemble:
+    - from: build/static
+      into: static
+liferay-sample-js-import-maps-entry:
+    bareSpecifier: editableWeb
+    name: Liferay Sample JS Import Maps Entry
+    type: jsImportMapsEntry
+    url: https://cdn.statically.io/gh/nikolabrkovic/test/20920f56/index.js

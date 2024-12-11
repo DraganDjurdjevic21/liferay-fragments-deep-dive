@@ -1,0 +1,49 @@
+version: '2.6'
+
+services:
+
+  database:
+    image: mysql:8.0.29
+    platform: linux/amd64
+    restart: always
+    ports:
+      - "63306:3306"
+    command: [ 'mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci', '--lower_case_table_names=1', '--transaction-isolation=READ-COMMITTED' ]
+    env_file:
+      - .env
+    volumes:
+      - ./mysql/docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d
+      - ./mysql/dbinit/:/etc/mysql/conf.d
+      - ./data/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=prodyna
+      - MYSQL_USER=liferay
+      - MYSQL_PASSWORD=liferay
+      - MYSQL_DATABASE=lportal
+    healthcheck:
+      test: "/usr/bin/mysql --user=root --password=prodyna --execute \"SHOW DATABASES;\""
+      interval: 10s
+      timeout: 20s
+      retries: 10
+    networks:
+      - liferay
+
+  liferay:
+    image: liferay/dxp:2024.q2.2
+    ports:
+      - "8080:8080"
+      - "8000:8000"
+    volumes:
+      - ./../build/docker/deploy:/opt/liferay/deploy
+      - ./../build/docker/client-extensions:/opt/liferay/osgi/client-extensions
+    hostname: portaldev
+    networks:
+      - liferay
+    environment:
+      - WAIT_HOSTS=database:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=30
+      - WAIT_HOST_CONNECT_TIMEOUT=30
+networks:
+  liferay:
